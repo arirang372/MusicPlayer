@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.sung.musicplayer.model.Song" />
+
+        <variable
+            name="callback"
+            type="com.sung.musicplayer.view.PlayListCallback" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/music_item_normal_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:longClickable="true"
+        android:onClick="@{() -> callback.onListItemClick(model)}"
+        android:onLongClick="@{()-> callback.onListItemLongClick(model)}">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/music_item_card_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintDimensionRatio="2:2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/music_item_avatar_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/placeholder"
+                android:scaleType="fitXY"
+                android:src="@{model.clipArt}"
+                app:layout_constraintDimensionRatio="2:2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/music_item_name_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="1"
+            android:padding="4dp"
+            android:text="@{model.title}"
+            android:textAlignment="center"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="@dimen/subheading1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_item_card_view" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
