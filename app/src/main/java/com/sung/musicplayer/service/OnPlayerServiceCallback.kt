@@ -15,7 +15,5 @@ interface OnPlayerServiceCallback {
 
     fun setVisibilityData(isVisibility: Boolean)
 
-    fun setPlayStatus(isPlay: Boolean)
-
     fun stopService()
 }

@@ -99,23 +99,19 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
             PlaybackState.STATE_BUFFERING -> {
                 mCallback?.setBufferingData(true)
                 mCallback?.setVisibilityData(true)
-                mCallback?.setPlayStatus(true)
             }
             PlaybackState.STATE_PLAYING -> {
                 mCallback?.setBufferingData(false)
                 mCallback?.setVisibilityData(true)
-                mCallback?.setPlayStatus(true)
             }
 
             PlaybackState.STATE_PAUSED -> {
                 mCallback?.setBufferingData(false)
                 mCallback?.setVisibilityData(true)
-                mCallback?.setPlayStatus(false)
             }
             else -> {
                 mCallback?.setBufferingData(false)
                 mCallback?.setVisibilityData(false)
-                mCallback?.setPlayStatus(false)
             }
         }
         mNotificationManager?.generateNotification()
@@ -131,10 +127,6 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
 
     override fun onShuffle(isShuffle: Boolean) {
         mMediaAdapter?.shuffle(isShuffle)
-    }
-
-    override fun onSongChanged(song: Song) {
-        mCallback?.updateSongData(song)
     }
 
     override fun setDuration(duration: Long, position: Long) {
@@ -183,5 +175,4 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
         const val CMD_NAME = "CMD_NAME"
         const val CMD_PAUSE = "CMD_PAUSE"
     }
-
 }

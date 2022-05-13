@@ -13,8 +13,6 @@ import com.sung.musicplayer.model.Song
  */
 interface OnMediaAdapterCallback {
 
-    fun onSongChanged(song: Song)
-
     fun onPlaybackStateChanged(state: Int)
 
     fun setDuration(duration: Long, position: Long)

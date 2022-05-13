@@ -126,10 +126,6 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
 
     }
 
-    override fun setPlayStatus(isPlay: Boolean) {
-
-    }
-
     override fun stopService() {
         unbindService()
         mService = null
