@@ -15,6 +15,7 @@ import com.sung.musicplayer.viewmodel.SongPlayerViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
+
 class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, SongPlayerCallback {
     private lateinit var binding: ActivitySongPlayerBinding
     private var bound = false
@@ -33,7 +34,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
                 ACTION_PAUSE -> mService?.pause()
                 ACTION_STOP -> {
                     mService?.stop()
-                    //TODO:: update something with view model...
+                    songPlayerViewModel.stop()
                 }
             }
         }
@@ -113,10 +114,6 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
             handler.sendEmptyMessage(msg)
     }
 
-    override fun updateSongData(song: Song) {
-
-    }
-
     override fun updateSongProgress(duration: Long, position: Long) {
         songPlayerViewModel.updateSongProgress(position, duration)
     }
@@ -134,7 +131,15 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
     }
 
     override fun stopService() {
+        unbindService()
+        mService = null
+    }
 
+    private fun unbindService(){
+        if(bound){
+            unbindService(serviceConnection)
+            bound = false
+        }
     }
 
     override fun onNextClick() {

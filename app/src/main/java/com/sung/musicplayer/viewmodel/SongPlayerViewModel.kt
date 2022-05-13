@@ -59,6 +59,11 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         }
     }
 
+    fun stop(){
+        setIsMusicPlaying(false)
+        seekTo(songPlayer.passedTimeProgress.get().toLong())
+    }
+
     fun updateSongProgress(currentPosition: Long, duration: Long) {
         if (currentPosition > duration) return
         songPlayer.passedTime.set(formatTimeInMillisToString(currentPosition))
