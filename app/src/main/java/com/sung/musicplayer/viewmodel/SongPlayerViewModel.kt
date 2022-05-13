@@ -31,6 +31,25 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         setToggleButtonImage(getDrawable, songPlayer.isMusicPlaying.get())
     }
 
+    fun onProgressChanged(progress: Int, fromUser: Boolean){
+        if(fromUser)
+            seekTo(progress.toLong())
+    }
+
+    fun seekTo(position: Long) {
+        songPlayer.passedTime.set(formatTimeInMillisToString(position))
+        songPlayer.passedTimeProgress.set(position.toInt())
+    }
+
+    fun updateSongProgress(currentPosition : Long, duration : Long){
+        if(currentPosition > duration) return
+        songPlayer.passedTime.set(formatTimeInMillisToString(currentPosition))
+        songPlayer.passedTimeProgress.set(currentPosition.toInt())
+
+        if(songPlayer.songDuration.get() == 0)
+            songPlayer.songDuration.set(duration.toInt())
+    }
+
     fun setIsMusicPlaying(isMusicPlaying: Boolean) {
         songPlayer.isMusicPlaying.set(isMusicPlaying)
     }

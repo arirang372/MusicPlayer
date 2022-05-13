@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.*
+import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.sung.musicplayer.databinding.ActivitySongPlayerBinding
@@ -104,13 +105,12 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
             handler.sendEmptyMessage(msg)
     }
 
-
     override fun updateSongData(song: Song) {
 
     }
 
     override fun updateSongProgress(duration: Long, position: Long) {
-
+        songPlayerViewModel.updateSongProgress(position, duration)
     }
 
     override fun setBufferingData(isBuffering: Boolean) {
@@ -139,6 +139,10 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
 
     override fun onToggleClick() {
         songPlayerViewModel.onToggleClick(resources::getDrawable)
+    }
+
+    override fun onProgressChanged(progress: Int, fromUser: Boolean) {
+        songPlayerViewModel.onProgressChanged(progress, fromUser)
     }
 
     companion object {

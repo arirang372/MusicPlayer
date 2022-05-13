@@ -2,9 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="callback"
             type="com.sung.musicplayer.view.SongPlayerCallback" />
+
         <variable
             name="model"
             type="com.sung.musicplayer.model.SongPlayer" />
@@ -59,6 +61,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
+            android:max="@{model.songDuration}"
+            android:onProgressChanged="@{(_,b,c)-> callback.onProgressChanged(b,c)}"
+            android:progress="@{model.passedTimeProgress}"
             app:layout_constraintTop_toBottomOf="@+id/song_player_singer_name_text_view" />
 
         <TextView
@@ -70,6 +75,7 @@
             android:layout_marginEnd="8dp"
             android:gravity="center"
             android:singleLine="true"
+            android:text="@{model.passedTime}"
             android:textColor="@color/colorPrimaryLight"
             android:textSize="@dimen/caption"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -104,9 +110,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/song_player_progress_seek_bar"
             android:layout_centerHorizontal="true"
+            android:onClick="@{()-> callback.onToggleClick()}"
             android:padding="8dp"
             android:scaleType="fitCenter"
-            android:onClick="@{()-> callback.onToggleClick()}"
             android:src="@{model.toggleButtonImage}"
             app:layout_constraintBottom_toTopOf="@+id/song_player_horizontal_guideline"
             app:layout_constraintEnd_toEndOf="parent"
