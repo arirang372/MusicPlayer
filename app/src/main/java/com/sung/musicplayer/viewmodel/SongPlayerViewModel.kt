@@ -38,4 +38,7 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         }
     }
 
+    fun setIsMusicPlaying(isMusicPlaying : Boolean){
+        songPlayer.isMusicPlaying.set(isMusicPlaying)
+    }
 }
