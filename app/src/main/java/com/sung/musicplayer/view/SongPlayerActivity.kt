@@ -17,12 +17,14 @@ import javax.inject.Inject
 
 class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, SongPlayerCallback {
     private lateinit var binding: ActivitySongPlayerBinding
-    private var mService: SongPlayerService? = null
     private var bound = false
+    private var mService: SongPlayerService? = null
     private var msg = 0
-
     private var song: Song? = null
     private var songList: MutableList<Song>? = null
+    private val songPlayerViewModel: SongPlayerViewModel by viewModels {
+        viewModelFactory
+    }
 
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
@@ -37,12 +39,26 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         }
     }
 
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as SongPlayerService.LocalBinder
+            mService = binder.service
+            bound = true
+            mService?.subscribeToSongPlayerUpdates()
+            handler.sendEmptyMessage(msg)
+            mService?.addListener(this@SongPlayerActivity)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            bound = false
+            mService?.removeListener()
+            mService = null
+        }
+    }
+
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val songPlayerViewModel: SongPlayerViewModel by viewModels {
-        viewModelFactory
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,22 +83,6 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         setContentView(binding.root)
     }
 
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            val binder = service as SongPlayerService.LocalBinder
-            mService = binder.service
-            bound = true
-            mService?.subscribeToSongPlayerUpdates()
-            handler.sendEmptyMessage(msg)
-            mService?.addListener(this@SongPlayerActivity)
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            bound = false
-            mService?.removeListener()
-            mService = null
-        }
-    }
 
     private fun bindPlayerService() {
         if (!bound)
@@ -97,7 +97,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         msg = ACTION_PLAY_SONG_IN_LIST
         this.song = song
         this.songList = songList
-        songPlayerViewModel.setIsMusicPlaying(resources::getDrawable, true)
+        songPlayerViewModel.setIsMusicPlaying(true)
         if (mService == null)
             bindPlayerService()
         else
@@ -106,7 +106,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
 
     private fun pause() {
         msg = ACTION_PAUSE
-        songPlayerViewModel.setIsMusicPlaying(resources::getDrawable, false)
+        songPlayerViewModel.setIsMusicPlaying(false)
         if (mService == null)
             bindPlayerService()
         else
@@ -118,7 +118,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
     }
 
     override fun updateSongProgress(duration: Long, position: Long) {
-        songPlayerViewModel.updateSongProgress(resources::getDrawable, position, duration)
+        songPlayerViewModel.updateSongProgress(position, duration)
     }
 
     override fun setBufferingData(isBuffering: Boolean) {
@@ -151,7 +151,8 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
 
     override fun onProgressChanged(progress: Int, fromUser: Boolean) {
         songPlayerViewModel.onProgressChanged(progress, fromUser)
-        mService?.seekTo(progress.toLong())
+        if (fromUser)
+            mService?.seekTo(progress.toLong())
     }
 
     companion object {
