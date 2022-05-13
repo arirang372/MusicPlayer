@@ -45,7 +45,6 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
     // Whether to return STATE_NONE or STATE_STOPPED when mExoPlayer is null;
     private var mExoPlayerIsStopped = false
 
-
     private val mOnAudioFocusChangeListener =
         AudioManager.OnAudioFocusChangeListener { focusChange ->
             //Log.d(TAG, "onAudioFocusChange. focusChange= $focusChange")
@@ -67,6 +66,39 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
             // Update the player state based on the change
             configurePlayerState()
         }
+
+    private val mAudioNoisyReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY == intent.action) {
+                if (mPlayOnFocusGain || mExoPlayer != null && mExoPlayer?.playWhenReady == true) {
+                    val intent = Intent(context, SongPlayerService::class.java).apply {
+                        action = SongPlayerService.ACTION_CMD
+                        putExtra(SongPlayerService.CMD_NAME, SongPlayerService.CMD_PAUSE)
+                    }
+                    context.applicationContext.startService(intent)
+                }
+            }
+        }
+    }
+
+    private val mUpdateProgressHandler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            val duration = mExoPlayer?.duration ?: 0
+            val position = mExoPlayer?.currentPosition ?: 0
+            onUpdateProgress(position, duration)
+            sendEmptyMessageDelayed(0, UPDATE_PROGRESS_DELAY)
+        }
+    }
+
+    init {
+        this.mAudioManager =
+            context.applicationContext?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        // Create the Wifi lock (this does not acquire the lock, this just creates it)
+        this.mWifiLock =
+            (context.applicationContext?.getSystemService(Context.WIFI_SERVICE) as WifiManager)
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "app_lock")
+    }
+
 
     /**
      * Reconfigures the player according to audio focus settings and starts/restarts it. This method
@@ -97,28 +129,6 @@ class ExoPlayerManager(val context: Context) : OnExoPlayerManagerCallback {
         }
     }
 
-    private val mAudioNoisyReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (AudioManager.ACTION_AUDIO_BECOMING_NOISY == intent.action) {
-                if (mPlayOnFocusGain || mExoPlayer != null && mExoPlayer?.playWhenReady == true) {
-                    val intent = Intent(context, SongPlayerService::class.java).apply {
-                        action = SongPlayerService.ACTION_CMD
-                        putExtra(SongPlayerService.CMD_NAME, SongPlayerService.CMD_PAUSE)
-                    }
-                    context.applicationContext.startService(intent)
-                }
-            }
-        }
-    }
-
-    private val mUpdateProgressHandler = object : Handler(Looper.getMainLooper()) {
-        override fun handleMessage(msg: Message) {
-            val duration = mExoPlayer?.duration ?: 0
-            val position = mExoPlayer?.currentPosition ?: 0
-            onUpdateProgress(position, duration)
-            sendEmptyMessageDelayed(0, UPDATE_PROGRESS_DELAY)
-        }
-    }
 
     private fun onUpdateProgress(position: Long, duration: Long) {
         mExoSongStateCallback?.setCurrentPosition(position, duration)

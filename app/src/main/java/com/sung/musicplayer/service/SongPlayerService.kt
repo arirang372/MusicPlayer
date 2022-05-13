@@ -59,7 +59,7 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
 
     fun getPlayState() = playState
 
-    fun play(song: Song?) {
+    private fun play(song: Song?) {
         song?.let {
             mMediaAdapter?.play(song)
         }

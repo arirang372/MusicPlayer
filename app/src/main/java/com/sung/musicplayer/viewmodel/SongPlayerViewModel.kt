@@ -26,15 +26,9 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         }
     }
 
-    fun setUpModel(getDrawable: (Int) -> Drawable, song: Song) {
-        with(songPlayer) {
-            isMusicPlaying.set(true)
-            songImage.set(song.clipArt)
-            setToggleButtonImage(getDrawable, isMusicPlaying.get())
-            title.set(song.title)
-            artist.set(song.artist)
-            totalTime.set(formatTimeInMillisToString(song.duration?.toLong() ?: 0L))
-        }
+    fun onToggleClick(getDrawable: (Int) -> Drawable) {
+        setIsMusicPlaying(!songPlayer.isMusicPlaying.get())
+        setToggleButtonImage(getDrawable, songPlayer.isMusicPlaying.get())
     }
 
     fun setIsMusicPlaying(isMusicPlaying: Boolean) {
@@ -46,8 +40,14 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
             R.drawable.ic_play_vector))
     }
 
-    fun onToggleClick(getDrawable: (Int) -> Drawable) {
-        setIsMusicPlaying(!songPlayer.isMusicPlaying.get())
-        setToggleButtonImage(getDrawable, songPlayer.isMusicPlaying.get())
+    fun setUpModel(getDrawable: (Int) -> Drawable, song: Song) {
+        with(songPlayer) {
+            isMusicPlaying.set(true)
+            songImage.set(song.clipArt)
+            setToggleButtonImage(getDrawable, isMusicPlaying.get())
+            title.set(song.title)
+            artist.set(song.artist)
+            totalTime.set(formatTimeInMillisToString(song.duration?.toLong() ?: 0L))
+        }
     }
 }

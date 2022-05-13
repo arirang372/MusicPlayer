@@ -53,12 +53,11 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
             }
         }
 
-        songPlayerViewModel.songList.observe(this) {
-
-        }
-
-        songPlayerViewModel.getSongBy(songId).observe(this) {
-            songPlayerViewModel.setUpModel(resources::getDrawable, it)
+        songPlayerViewModel.songList.observe(this) { songList ->
+            songPlayerViewModel.getSongBy(songId).observe(this) { song ->
+                songPlayerViewModel.setUpModel(resources::getDrawable, song)
+                play(songList, song)
+            }
         }
 
         binding = ActivitySongPlayerBinding.inflate(layoutInflater).apply {
