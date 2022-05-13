@@ -2,7 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="callback"
+            type="com.sung.musicplayer.view.SongPlayerCallback" />
         <variable
             name="model"
             type="com.sung.musicplayer.model.SongPlayer" />
@@ -104,6 +106,7 @@
             android:layout_centerHorizontal="true"
             android:padding="8dp"
             android:scaleType="fitCenter"
+            android:onClick="@{()-> callback.onToggleClick()}"
             android:src="@{model.toggleButtonImage}"
             app:layout_constraintBottom_toTopOf="@+id/song_player_horizontal_guideline"
             app:layout_constraintEnd_toEndOf="parent"

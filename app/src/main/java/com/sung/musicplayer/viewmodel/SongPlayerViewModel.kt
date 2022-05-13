@@ -15,7 +15,7 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
     ViewModel() {
 
     private var songLiveData: LiveData<Song>? = null
-    val songList : LiveData<MutableList<Song>> = repository.getSongs()
+    val songList: LiveData<MutableList<Song>> = repository.getSongs()
     var songPlayer = SongPlayer()
 
     fun getSongBy(id: Int): LiveData<Song> {
@@ -30,15 +30,24 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         with(songPlayer) {
             isMusicPlaying.set(true)
             songImage.set(song.clipArt)
-            toggleButtonImage.set(if (isMusicPlaying.get()) getDrawable(R.drawable.ic_pause_vector) else getDrawable(
-                R.drawable.ic_play_vector))
+            setToggleButtonImage(getDrawable, isMusicPlaying.get())
             title.set(song.title)
             artist.set(song.artist)
             totalTime.set(formatTimeInMillisToString(song.duration?.toLong() ?: 0L))
         }
     }
 
-    fun setIsMusicPlaying(isMusicPlaying : Boolean){
+    fun setIsMusicPlaying(isMusicPlaying: Boolean) {
         songPlayer.isMusicPlaying.set(isMusicPlaying)
+    }
+
+    private fun setToggleButtonImage(getDrawable: (Int) -> Drawable, isMusicPlaying: Boolean) {
+        songPlayer.toggleButtonImage.set(if (isMusicPlaying) getDrawable(R.drawable.ic_pause_vector) else getDrawable(
+            R.drawable.ic_play_vector))
+    }
+
+    fun onToggleClick(getDrawable: (Int) -> Drawable) {
+        setIsMusicPlaying(!songPlayer.isMusicPlaying.get())
+        setToggleButtonImage(getDrawable, songPlayer.isMusicPlaying.get())
     }
 }

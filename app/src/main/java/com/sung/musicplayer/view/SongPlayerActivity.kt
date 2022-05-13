@@ -15,7 +15,7 @@ import com.sung.musicplayer.viewmodel.SongPlayerViewModel
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
-class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback {
+class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, SongPlayerCallback {
     private lateinit var binding: ActivitySongPlayerBinding
     private var mService: SongPlayerService? = null
     private var bound = false
@@ -63,6 +63,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback {
 
         binding = ActivitySongPlayerBinding.inflate(layoutInflater).apply {
             this.model = songPlayerViewModel.songPlayer
+            this.callback = this@SongPlayerActivity
         }
         setContentView(binding.root)
     }
@@ -129,6 +130,18 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback {
 
     }
 
+    override fun onNextClick() {
+
+    }
+
+    override fun onPrevClick() {
+
+    }
+
+    override fun onToggleClick() {
+        songPlayerViewModel.onToggleClick(resources::getDrawable)
+    }
+
     companion object {
 
         private val TAG = SongPlayerActivity::class.java.name
@@ -139,3 +152,4 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback {
         private const val ACTION_STOP = 3
     }
 }
+
