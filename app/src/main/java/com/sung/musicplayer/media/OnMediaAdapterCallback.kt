@@ -13,16 +13,17 @@ import com.sung.musicplayer.model.Song
  */
 interface OnMediaAdapterCallback {
 
-    fun onPlaybackStateChanged(state: Int)
-
-    fun setDuration(duration: Long, position: Long)
-
     fun addNewPlaylistToCurrent(songList: ArrayList<Song>)
 
-    fun onShuffle(isShuffle: Boolean)
+    fun onPlaybackStateChanged(state: Int)
 
     fun onRepeat(isRepeat: Boolean)
 
     fun onRepeatAll(repeatAll: Boolean)
 
+    fun onShuffle(isShuffle: Boolean)
+
+    fun onSongChanged(song: Song)
+
+    fun setDuration(duration: Long, position: Long)
 }

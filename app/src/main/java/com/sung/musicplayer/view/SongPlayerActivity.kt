@@ -60,7 +60,6 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         var songId = 0
@@ -114,6 +113,11 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
             handler.sendEmptyMessage(msg)
     }
 
+    override fun updateSongData(song: Song) {
+        songPlayerViewModel.setUpModel(song)
+        songPlayerViewModel.setIsMusicPlaying(true)
+    }
+
     override fun updateSongProgress(duration: Long, position: Long) {
         songPlayerViewModel.updateSongProgress(position, duration)
     }
@@ -131,19 +135,19 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         mService = null
     }
 
-    private fun unbindService(){
-        if(bound){
+    private fun unbindService() {
+        if (bound) {
             unbindService(serviceConnection)
             bound = false
         }
     }
 
     override fun onNextClick() {
-
+        mService?.skipToNext()
     }
 
     override fun onPrevClick() {
-
+        mService?.skipToPrevious()
     }
 
     override fun onToggleClick() {
@@ -157,13 +161,12 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
     }
 
     companion object {
-
-        private val TAG = SongPlayerActivity::class.java.name
-        const val SONG_LIST_KEY = "SONG_LIST_KEY"
-        const val SONG_ID = "SONG_ID"
         private const val ACTION_PLAY_SONG_IN_LIST = 1
         private const val ACTION_PAUSE = 2
         private const val ACTION_STOP = 3
+        const val SONG_LIST_KEY = "SONG_LIST_KEY"
+        const val SONG_ID = "SONG_ID"
+        private val TAG = SongPlayerActivity::class.java.name
     }
 }
 

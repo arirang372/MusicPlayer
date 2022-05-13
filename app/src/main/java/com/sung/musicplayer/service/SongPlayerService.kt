@@ -93,6 +93,10 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
         mMediaAdapter?.addToCurrentPlaylist(songList)
     }
 
+    override fun onSongChanged(song: Song) {
+        mCallback?.updateSongData(song)
+    }
+
     override fun onPlaybackStateChanged(state: Int) {
         playState = state
         when (state) {

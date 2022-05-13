@@ -118,7 +118,7 @@
             app:layout_constraintBottom_toTopOf="@+id/song_player_horizontal_guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:src="@drawable/ic_play_vector"/>
+            tools:src="@drawable/ic_play_vector" />
 
         <ImageView
             android:id="@+id/song_player_shuffle_image_view"
@@ -137,6 +137,7 @@
             android:id="@+id/song_player_skip_back_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{()-> callback.onPrevClick()}"
             android:padding="8dp"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/song_player_horizontal_guideline"
@@ -150,6 +151,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:onClick="@{()-> callback.onNextClick()}"
             android:padding="8dp"
             android:scaleType="fitCenter"
             app:layout_constraintBottom_toTopOf="@+id/song_player_horizontal_guideline"

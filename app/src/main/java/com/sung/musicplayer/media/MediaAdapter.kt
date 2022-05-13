@@ -67,10 +67,9 @@ class MediaAdapter(
         playlistManager?.setRepeat(isRepeat)
     }
 
-
     override fun onSongChanged(song: Song) {
-        play(song)
         mediaAdapterCallback.onSongChanged(song)
+        play(song)
     }
 
     override fun onSongRetrieveError() {

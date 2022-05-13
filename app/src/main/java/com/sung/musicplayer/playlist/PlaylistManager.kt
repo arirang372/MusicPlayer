@@ -5,7 +5,6 @@ import java.util.*
 import kotlin.math.max
 
 class PlaylistManager(private val listener: OnSongUpdateListener) {
-
     /**
      * To make an interaction between [PlaylistManager] & [MediaController]
      *
@@ -31,8 +30,8 @@ class PlaylistManager(private val listener: OnSongUpdateListener) {
         return playlist?.getItem(mCurrentIndex)
     }
 
-    fun getCurrentSongList(): java.util.ArrayList<Song> {
-        return playlist?.getShuffleOrNormalList() as java.util.ArrayList<Song>
+    fun getCurrentSongList(): ArrayList<Song> {
+        return playlist?.getShuffleOrNormalList() as ArrayList<Song>
     }
 
     private fun setCurrentPlaylistIndex(index: Int) {
