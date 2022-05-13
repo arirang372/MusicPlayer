@@ -62,7 +62,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
             android:max="@{model.songDuration}"
-            android:onProgressChanged="@{(_,b,c)-> callback.onProgressChanged(b,c)}"
+            android:onProgressChanged="@{(_,progress,fromUser)-> callback.onProgressChanged(progress,fromUser)}"
             android:progress="@{model.passedTimeProgress}"
             app:layout_constraintTop_toBottomOf="@+id/song_player_singer_name_text_view" />
 

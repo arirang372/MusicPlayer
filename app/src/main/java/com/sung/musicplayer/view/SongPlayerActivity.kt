@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.*
-import android.widget.SeekBar
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.sung.musicplayer.databinding.ActivitySongPlayerBinding
@@ -56,7 +55,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
 
         songPlayerViewModel.songList.observe(this) { songList ->
             songPlayerViewModel.getSongBy(songId).observe(this) { song ->
-                songPlayerViewModel.setUpModel(resources::getDrawable, song)
+                songPlayerViewModel.setUpModel(song)
                 play(songList, song)
             }
         }
@@ -98,7 +97,16 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         msg = ACTION_PLAY_SONG_IN_LIST
         this.song = song
         this.songList = songList
-        songPlayerViewModel.setIsMusicPlaying(true)
+        songPlayerViewModel.setIsMusicPlaying(resources::getDrawable, true)
+        if (mService == null)
+            bindPlayerService()
+        else
+            handler.sendEmptyMessage(msg)
+    }
+
+    private fun pause() {
+        msg = ACTION_PAUSE
+        songPlayerViewModel.setIsMusicPlaying(resources::getDrawable, false)
         if (mService == null)
             bindPlayerService()
         else
@@ -110,7 +118,7 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
     }
 
     override fun updateSongProgress(duration: Long, position: Long) {
-        songPlayerViewModel.updateSongProgress(position, duration)
+        songPlayerViewModel.updateSongProgress(resources::getDrawable, position, duration)
     }
 
     override fun setBufferingData(isBuffering: Boolean) {
@@ -138,11 +146,12 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
     }
 
     override fun onToggleClick() {
-        songPlayerViewModel.onToggleClick(resources::getDrawable)
+        songPlayerViewModel.onToggleClick(this::pause, this::play)
     }
 
     override fun onProgressChanged(progress: Int, fromUser: Boolean) {
         songPlayerViewModel.onProgressChanged(progress, fromUser)
+        mService?.seekTo(progress.toLong())
     }
 
     companion object {

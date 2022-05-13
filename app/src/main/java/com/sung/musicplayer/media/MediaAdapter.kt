@@ -116,5 +116,4 @@ class MediaAdapter(
     companion object {
         private val TAG = MediaAdapter::class.java.name
     }
-
 }

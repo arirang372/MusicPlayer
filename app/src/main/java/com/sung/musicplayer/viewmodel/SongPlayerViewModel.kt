@@ -26,47 +26,52 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         }
     }
 
-    fun onToggleClick(getDrawable: (Int) -> Drawable) {
-        setIsMusicPlaying(!songPlayer.isMusicPlaying.get())
-        setToggleButtonImage(getDrawable, songPlayer.isMusicPlaying.get())
+    fun onToggleClick(
+        pause: () -> Unit,
+        play: (songList: MutableList<Song>?, song: Song) -> Unit,
+    ) {
+        if (songPlayer.isMusicPlaying.get())
+            pause.invoke()
+        else
+            songLiveData?.value?.let {
+                play.invoke(songList.value, it)
+            }
     }
 
-    fun onProgressChanged(progress: Int, fromUser: Boolean){
-        if(fromUser)
+    fun onProgressChanged(progress: Int, fromUser: Boolean) {
+        if (fromUser)
             seekTo(progress.toLong())
     }
 
-    fun seekTo(position: Long) {
+    private fun seekTo(position: Long) {
         songPlayer.passedTime.set(formatTimeInMillisToString(position))
         songPlayer.passedTimeProgress.set(position.toInt())
     }
 
-    fun updateSongProgress(currentPosition : Long, duration : Long){
-        if(currentPosition > duration) return
-        songPlayer.passedTime.set(formatTimeInMillisToString(currentPosition))
-        songPlayer.passedTimeProgress.set(currentPosition.toInt())
-
-        if(songPlayer.songDuration.get() == 0)
-            songPlayer.songDuration.set(duration.toInt())
-    }
-
-    fun setIsMusicPlaying(isMusicPlaying: Boolean) {
+    fun setIsMusicPlaying(getDrawable: (Int) -> Drawable, isMusicPlaying: Boolean) {
         songPlayer.isMusicPlaying.set(isMusicPlaying)
-    }
-
-    private fun setToggleButtonImage(getDrawable: (Int) -> Drawable, isMusicPlaying: Boolean) {
         songPlayer.toggleButtonImage.set(if (isMusicPlaying) getDrawable(R.drawable.ic_pause_vector) else getDrawable(
             R.drawable.ic_play_vector))
     }
 
-    fun setUpModel(getDrawable: (Int) -> Drawable, song: Song) {
+    fun setUpModel(song: Song) {
         with(songPlayer) {
-            isMusicPlaying.set(true)
             songImage.set(song.clipArt)
-            setToggleButtonImage(getDrawable, isMusicPlaying.get())
             title.set(song.title)
             artist.set(song.artist)
             totalTime.set(formatTimeInMillisToString(song.duration?.toLong() ?: 0L))
+        }
+    }
+
+    fun updateSongProgress(getDrawable: (Int) -> Drawable, currentPosition: Long, duration: Long) {
+        if (currentPosition > duration) return
+        songPlayer.passedTime.set(formatTimeInMillisToString(currentPosition))
+        songPlayer.passedTimeProgress.set(currentPosition.toInt())
+        if (songPlayer.songDuration.get() == 0)
+            songPlayer.songDuration.set(duration.toInt())
+        //When Song ends, we want to change the pause button to the play button
+        if (songPlayer.passedTime.get() == songPlayer.totalTime.get()) {
+            setIsMusicPlaying(getDrawable, false)
         }
     }
 }
