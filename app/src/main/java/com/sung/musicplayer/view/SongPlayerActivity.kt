@@ -27,7 +27,12 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback {
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
-
+                ACTION_PLAY_SONG_IN_LIST -> mService?.play(songList, song)
+                ACTION_PAUSE -> mService?.pause()
+                ACTION_STOP -> {
+                    mService?.stop()
+                    //TODO:: update something with view model...
+                }
             }
         }
     }
@@ -101,27 +106,27 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback {
 
 
     override fun updateSongData(song: Song) {
-        TODO("Not yet implemented")
+
     }
 
     override fun updateSongProgress(duration: Long, position: Long) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setBufferingData(isBuffering: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setVisibilityData(isVisibility: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setPlayStatus(isPlay: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun stopService() {
-        TODO("Not yet implemented")
+
     }
 
     companion object {
