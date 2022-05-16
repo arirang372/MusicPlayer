@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import com.sung.musicplayer.media.ExoPlayerManager
 import com.sung.musicplayer.media.MediaAdapter
 import com.sung.musicplayer.media.OnMediaAdapterCallback
-import com.sung.musicplayer.media.PlaybackState
 import com.sung.musicplayer.model.Song
 import com.sung.musicplayer.notification.MediaNotificationManager
 
@@ -99,25 +98,6 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
 
     override fun onPlaybackStateChanged(state: Int) {
         playState = state
-        when (state) {
-            PlaybackState.STATE_BUFFERING -> {
-                mCallback?.setBufferingData(true)
-                mCallback?.setVisibilityData(true)
-            }
-            PlaybackState.STATE_PLAYING -> {
-                mCallback?.setBufferingData(false)
-                mCallback?.setVisibilityData(true)
-            }
-
-            PlaybackState.STATE_PAUSED -> {
-                mCallback?.setBufferingData(false)
-                mCallback?.setVisibilityData(true)
-            }
-            else -> {
-                mCallback?.setBufferingData(false)
-                mCallback?.setVisibilityData(false)
-            }
-        }
         mNotificationManager?.generateNotification()
     }
 
@@ -163,7 +143,7 @@ class SongPlayerService : Service(), OnMediaAdapterCallback {
         val action = intent.action
         command = intent.getStringExtra(CMD_NAME)
         if (ACTION_CMD == action && CMD_PAUSE == command) {
-            //TODO:: fill this in..
+            mMediaAdapter?.pause()
         }
         return binder
     }

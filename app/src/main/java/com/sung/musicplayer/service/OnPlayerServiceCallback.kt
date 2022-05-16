@@ -11,10 +11,6 @@ import com.sung.musicplayer.model.Song
 
 interface OnPlayerServiceCallback {
 
-    fun setBufferingData(isBuffering: Boolean)
-
-    fun setVisibilityData(isVisibility: Boolean)
-
     fun stopService()
 
     fun updateSongData(song: Song)

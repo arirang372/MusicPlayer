@@ -35,7 +35,7 @@ class PlaylistManager(private val listener: OnSongUpdateListener) {
     }
 
     private fun setCurrentPlaylistIndex(index: Int) {
-        if (index >= 0 && index < playlist?.getShuffleOrNormalList()?.size ?: 0) {
+        if (index >= 0 && index < (playlist?.getShuffleOrNormalList()?.size ?: 0)) {
             mCurrentIndex = index
             //mListener.onUpdatePlaylistIndex(mCurrentIndex)
         }

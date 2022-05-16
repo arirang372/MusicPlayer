@@ -122,14 +122,6 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         songPlayerViewModel.updateSongProgress(position, duration)
     }
 
-    override fun setBufferingData(isBuffering: Boolean) {
-
-    }
-
-    override fun setVisibilityData(isVisibility: Boolean) {
-
-    }
-
     override fun stopService() {
         unbindService()
         mService = null
@@ -158,13 +150,13 @@ class SongPlayerActivity : DaggerAppCompatActivity(), OnPlayerServiceCallback, S
         songPlayerViewModel.onProgressChanged(progress, fromUser)
         if (fromUser)
             mService?.seekTo(progress.toLong())
+
     }
 
     companion object {
         private const val ACTION_PLAY_SONG_IN_LIST = 1
         private const val ACTION_PAUSE = 2
         private const val ACTION_STOP = 3
-        const val SONG_LIST_KEY = "SONG_LIST_KEY"
         const val SONG_ID = "SONG_ID"
         private val TAG = SongPlayerActivity::class.java.name
     }
