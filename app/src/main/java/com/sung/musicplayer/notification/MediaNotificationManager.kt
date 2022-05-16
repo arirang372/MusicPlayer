@@ -1,5 +1,6 @@
 package com.sung.musicplayer.notification
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -16,6 +17,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.sung.musicplayer.R
 import com.sung.musicplayer.service.SongPlayerService
+import com.sung.musicplayer.view.SongPlayerActivity
 import java.io.File
 
 /**
@@ -23,6 +25,7 @@ import java.io.File
  *
  * @author John Sung
  */
+@SuppressLint("UnspecifiedImmutableFlag")
 class MediaNotificationManager @Throws(RemoteException::class)
 constructor(private val service: SongPlayerService) : BroadcastReceiver() {
 
@@ -256,7 +259,9 @@ constructor(private val service: SongPlayerService) : BroadcastReceiver() {
     private fun createContentIntent(): PendingIntent {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("player://")).apply {
             flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-            //TODO::figure out intent extra later.
+        }.run {
+            val song = service.getCurrentSong()
+            putExtra(SongPlayerActivity.SONG_ID, song?.id)
         }
         return TaskStackBuilder.create(service).run {
             addNextIntentWithParentStack(intent)

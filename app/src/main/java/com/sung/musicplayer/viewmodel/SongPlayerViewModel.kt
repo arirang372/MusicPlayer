@@ -50,12 +50,12 @@ class SongPlayerViewModel @Inject constructor(private val repository: MusicPlaye
         songPlayer.isMusicPlaying.set(isMusicPlaying)
     }
 
-    fun setUpModel(song: Song) {
+    fun setUpModel(song: Song?) {
         with(songPlayer) {
-            songImage.set(song.clipArt)
-            title.set(song.title)
-            artist.set(song.artist)
-            totalTime.set(formatTimeInMillisToString(song.duration?.toLong() ?: 0L))
+            songImage.set(song?.clipArt)
+            title.set(song?.title)
+            artist.set(song?.artist)
+            totalTime.set(formatTimeInMillisToString(song?.duration?.toLong() ?: 0L))
         }
     }
 
