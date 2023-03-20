@@ -30,8 +30,7 @@ allprojects {
 
 ext {
     // Sdk and tools
-    buildToolVersion = "30.0.3"
-    compileSdkVersion = 30
+    compileSdkVersion = 31
     minSdkVersion = 26
     targetSdkVersion = 30
     versionCode = 1
@@ -59,7 +58,7 @@ ext {
     powermockVersion = '2.0.9'
     recycleViewVersion = '1.2.0'
     retrofitVersion = '2.9.0'
-    roomVersion = '2.3.0'
+    roomVersion = '2.4.0-beta02'
     workVersion = '2.5.0'
 }
 

@@ -9,7 +9,6 @@ plugins {
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolVersion
 
     defaultConfig {
         applicationId "com.sung.musicplayer"
